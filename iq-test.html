@@ -1,0 +1,1180 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Earthlink Group — Cognitive Assessment</title>
+<style>
+@import url('https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&family=JetBrains+Mono:wght@400;700&display=swap');
+:root{--bg:#07101F;--s1:#0D1826;--s2:#132030;--border:#1C2E44;--a1:#0EA5E9;--a2:#8B5CF6;--g:#10B981;--r:#EF4444;--w:#F59E0B;--txt:#E2EAF4;--sub:#6B88A8;}
+*,*::before,*::after{box-sizing:border-box;margin:0;padding:0}
+body{font-family:'Inter',sans-serif;background:var(--bg);color:var(--txt);min-height:100vh;overflow-x:hidden}
+button{font-family:inherit;cursor:pointer;border:none;outline:none}
+input{font-family:inherit;outline:none;border:none}
+#cvs{position:fixed;inset:0;z-index:0;pointer-events:none}
+.scr{position:relative;z-index:1;min-height:100vh;display:flex;flex-direction:column;align-items:center;justify-content:center;padding:28px 18px}
+.scr.off{display:none}
+.eyebrow{font-family:'JetBrains Mono',monospace;font-size:10px;letter-spacing:.28em;text-transform:uppercase;color:var(--a1);margin-bottom:16px}
+.hero{font-size:clamp(32px,6vw,60px);font-weight:700;line-height:1.1;text-align:center;margin-bottom:14px;background:linear-gradient(135deg,#fff 0%,var(--a1) 55%,var(--a2) 100%);-webkit-background-clip:text;-webkit-text-fill-color:transparent}
+.lead{font-size:15px;color:var(--sub);text-align:center;max-width:500px;line-height:1.65;margin-bottom:40px}
+.stat-row{display:grid;grid-template-columns:repeat(4,1fr);gap:12px;max-width:580px;width:100%;margin-bottom:40px}
+.stat{background:var(--s1);border:1px solid var(--border);border-radius:12px;padding:18px 10px;text-align:center}
+.stat-n{font-family:'JetBrains Mono',monospace;font-size:24px;font-weight:700;color:var(--a1);line-height:1}
+.stat-l{font-size:9px;color:var(--sub);text-transform:uppercase;letter-spacing:.12em;margin-top:5px}
+.field{max-width:380px;width:100%;margin-bottom:20px}
+.field label{display:block;font-size:11px;color:var(--sub);text-transform:uppercase;letter-spacing:.1em;margin-bottom:7px}
+.field input{width:100%;background:var(--s1);border:1.5px solid var(--border);border-radius:8px;padding:13px 15px;font-size:15px;color:var(--txt);transition:border-color .2s}
+.field input:focus{border-color:var(--a1)}
+.field input::placeholder{color:var(--sub)}
+.btn{background:linear-gradient(135deg,var(--a1),var(--a2));color:#fff;border-radius:8px;padding:14px 34px;font-size:15px;font-weight:600;transition:opacity .18s,transform .12s}
+.btn:hover{opacity:.88;transform:translateY(-1px)}
+.btn:active{transform:translateY(0)}
+.btn:disabled{opacity:.3;cursor:not-allowed;transform:none}
+.btn-ghost{background:transparent;color:var(--sub);border:1.5px solid var(--border);border-radius:8px;padding:12px 26px;font-size:13px;transition:border-color .2s,color .2s}
+.btn-ghost:hover{border-color:var(--a1);color:var(--txt)}
+/* SPLASH */
+.splash{background:var(--s1);border:1px solid var(--border);border-radius:18px;padding:40px 32px;max-width:540px;width:100%;text-align:center}
+.splash-ico{font-size:50px;margin-bottom:14px}
+.badge{display:inline-block;font-family:'JetBrains Mono',monospace;font-size:9px;letter-spacing:.2em;text-transform:uppercase;color:var(--a1);background:rgba(14,165,233,.1);border:1px solid rgba(14,165,233,.28);border-radius:99px;padding:4px 13px;margin-bottom:12px}
+.splash h2{font-size:22px;font-weight:700;margin-bottom:8px}
+.splash p{font-size:13px;color:var(--sub);line-height:1.6;margin-bottom:22px}
+.splash-meta{display:flex;gap:18px;justify-content:center;font-size:11px;color:var(--sub);margin-bottom:24px;flex-wrap:wrap}
+.type-pills{display:flex;flex-wrap:wrap;gap:6px;justify-content:center;margin-bottom:24px}
+.type-pill{font-size:10px;padding:3px 10px;border-radius:99px;border:1px solid var(--border);color:var(--sub);background:var(--s2)}
+/* QUESTION */
+#qscr{padding-top:16px}
+.topbar{width:100%;max-width:840px;display:flex;align-items:center;gap:12px;margin-bottom:16px}
+.sec-tag{font-family:'JetBrains Mono',monospace;font-size:10px;color:var(--a1);text-transform:uppercase;letter-spacing:.14em;white-space:nowrap}
+.prog-track{flex:1;height:3px;background:var(--s2);border-radius:2px;overflow:hidden}
+.prog-bar{height:100%;border-radius:2px;background:linear-gradient(90deg,var(--a1),var(--a2));transition:width .4s}
+.q-ctr{font-family:'JetBrains Mono',monospace;font-size:11px;color:var(--sub);white-space:nowrap}
+.clock{font-family:'JetBrains Mono',monospace;font-size:17px;font-weight:700;white-space:nowrap;color:var(--txt)}
+.clock.red{color:var(--r);animation:blink .55s infinite}
+@keyframes blink{0%,100%{opacity:1}50%{opacity:.35}}
+.qcard{background:var(--s1);border:1px solid var(--border);border-radius:16px;padding:28px 30px;width:100%;max-width:840px}
+.q-kind{font-family:'JetBrains Mono',monospace;font-size:9px;letter-spacing:.18em;text-transform:uppercase;color:var(--a2);margin-bottom:10px;display:block}
+.q-stem{font-size:clamp(14px,2vw,18px);font-weight:500;line-height:1.6;margin-bottom:20px;white-space:pre-wrap}
+.q-hint{font-size:12px;color:var(--sub);background:var(--s2);border-radius:7px;padding:8px 13px;margin-bottom:16px;line-height:1.5}
+/* MCQ */
+.mcq-grid{display:grid;grid-template-columns:1fr 1fr;gap:9px}
+.opt{background:var(--s2);border:1.5px solid var(--border);border-radius:9px;padding:12px 14px;cursor:pointer;transition:border-color .14s,background .14s;font-size:14px;color:var(--txt);display:flex;align-items:flex-start;gap:10px;line-height:1.4}
+.opt:hover:not(.locked){border-color:var(--a1);background:rgba(14,165,233,.06)}
+.opt.sel{border-color:var(--a1);background:rgba(14,165,233,.1)}
+.opt.ok{border-color:var(--g);background:rgba(16,185,129,.1);color:var(--g)}
+.opt.bad{border-color:var(--r);background:rgba(239,68,68,.1);color:var(--r)}
+.opt-k{font-family:'JetBrains Mono',monospace;font-size:10px;font-weight:700;color:var(--sub);min-width:16px;margin-top:2px;flex-shrink:0}
+.opt.sel .opt-k{color:var(--a1)}.opt.ok .opt-k{color:var(--g)}.opt.bad .opt-k{color:var(--r)}
+/* FIGURE QUESTION */
+.fig-area{margin-bottom:20px}
+.fig-matrix{display:grid;gap:8px;margin-bottom:4px}
+.fig-cell{background:var(--s2);border:1.5px solid var(--border);border-radius:8px;display:flex;align-items:center;justify-content:center;overflow:hidden}
+.fig-cell.blank-cell{border:2px dashed var(--a2);background:rgba(139,92,246,.05)}
+.fig-cell svg{width:100%;height:100%;display:block}
+.fig-opts{display:grid;gap:8px;margin-top:16px}
+.fig-opt{background:var(--s2);border:1.5px solid var(--border);border-radius:9px;cursor:pointer;transition:border-color .14s,background .14s;display:flex;flex-direction:column;align-items:center;padding:8px 6px;gap:4px;overflow:hidden}
+.fig-opt:hover:not(.locked){border-color:var(--a1);background:rgba(14,165,233,.06)}
+.fig-opt.sel{border-color:var(--a1);background:rgba(14,165,233,.1)}
+.fig-opt.ok{border-color:var(--g);background:rgba(16,185,129,.1)}
+.fig-opt.bad{border-color:var(--r);background:rgba(239,68,68,.1)}
+.fig-opt svg{width:70px;height:70px;display:block}
+.fig-opt-lbl{font-family:'JetBrains Mono',monospace;font-size:10px;color:var(--sub)}
+.fig-opt.sel .fig-opt-lbl{color:var(--a1)}.fig-opt.ok .fig-opt-lbl{color:var(--g)}.fig-opt.bad .fig-opt-lbl{color:var(--r)}
+.fig-row-label{font-family:'JetBrains Mono',monospace;font-size:9px;color:var(--sub);text-align:center;margin-bottom:2px}
+/* INPUT */
+.inp-wrap{display:flex;align-items:center;gap:12px}
+.ans-inp{background:var(--s2);border:1.5px solid var(--border);border-radius:9px;padding:12px 18px;font-family:'JetBrains Mono',monospace;font-size:19px;color:var(--txt);width:220px;text-align:center;transition:border-color .2s}
+.ans-inp:focus{border-color:var(--a1)}
+.ans-inp.ok{border-color:var(--g);color:var(--g)}
+.ans-inp.bad{border-color:var(--r);color:var(--r)}
+/* SEQ TILES */
+.seq-row{display:flex;flex-wrap:wrap;gap:8px;align-items:center;margin-bottom:20px}
+.seq-box{min-width:50px;height:50px;border-radius:9px;background:var(--s2);border:1.5px solid var(--border);display:flex;align-items:center;justify-content:center;font-family:'JetBrains Mono',monospace;font-size:16px;font-weight:700;padding:4px 10px}
+.seq-box.blank{border:2px dashed var(--a2);color:var(--a2);font-size:22px}
+/* WORD BRIDGE */
+.bridge-wrap{display:flex;align-items:center;gap:10px;flex-wrap:wrap;margin-bottom:20px}
+.bridge-word{background:var(--s2);border:1.5px solid var(--border);border-radius:8px;padding:10px 16px;font-size:15px;font-weight:600}
+.bridge-blank{border:2px dashed var(--a2);color:var(--a2);font-family:'JetBrains Mono',monospace;min-width:100px;text-align:center}
+.bridge-arrow{color:var(--sub);font-size:18px}
+/* ANAGRAM */
+.anagram-tiles{display:flex;flex-wrap:wrap;gap:7px;margin-bottom:18px}
+.anagram-tile{background:var(--s2);border:1.5px solid var(--border);border-radius:8px;width:44px;height:44px;display:flex;align-items:center;justify-content:center;font-family:'JetBrains Mono',monospace;font-size:18px;font-weight:700;color:var(--a1)}
+/* CODED */
+.coded-wrap{background:var(--s2);border:1px solid var(--border);border-radius:10px;padding:14px 18px;margin-bottom:18px;font-family:'JetBrains Mono',monospace;font-size:16px;letter-spacing:.1em;color:var(--a1)}
+/* FEEDBACK */
+.fb{margin-top:14px;padding:11px 15px;border-radius:9px;font-size:13px;font-weight:500;display:none;line-height:1.5}
+.fb.ok{background:rgba(16,185,129,.1);color:var(--g);border:1px solid rgba(16,185,129,.28)}
+.fb.bad{background:rgba(239,68,68,.1);color:var(--r);border:1px solid rgba(239,68,68,.28)}
+.q-actions{margin-top:18px;display:flex;justify-content:flex-end;gap:10px;align-items:center}
+.skip-btn{font-size:12px;color:var(--sub);cursor:pointer;text-decoration:underline;background:none;padding:4px 8px}
+.skip-btn:hover{color:var(--txt)}
+/* RESULTS */
+.rcard{background:var(--s1);border:1px solid var(--border);border-radius:18px;padding:40px 32px;max-width:660px;width:100%;text-align:center}
+.r-lbl{font-size:11px;color:var(--sub);text-transform:uppercase;letter-spacing:.2em;margin-bottom:6px}
+.r-iq{font-family:'JetBrains Mono',monospace;font-size:88px;font-weight:700;line-height:1;background:linear-gradient(135deg,var(--a1),var(--a2));-webkit-background-clip:text;-webkit-text-fill-color:transparent;margin-bottom:8px}
+.r-band{display:inline-block;padding:5px 20px;border-radius:99px;font-size:13px;font-weight:600;margin-bottom:22px}
+.bell-box{background:var(--s2);border:1px solid var(--border);border-radius:9px;padding:14px;margin-bottom:20px}
+.bkdn{display:grid;grid-template-columns:1fr 1fr;gap:10px;margin-bottom:18px}
+.bk{background:var(--s2);border:1px solid var(--border);border-radius:9px;padding:12px;text-align:left}
+.bk-lbl{font-size:10px;color:var(--sub);text-transform:uppercase;letter-spacing:.1em;margin-bottom:7px}
+.bk-track{height:4px;background:var(--border);border-radius:2px;overflow:hidden;margin-bottom:5px}
+.bk-fill{height:100%;border-radius:2px;background:linear-gradient(90deg,var(--a1),var(--a2))}
+.bk-sc{font-family:'JetBrains Mono',monospace;font-size:12px}
+.sub-status{margin-top:16px;padding:11px 14px;border-radius:9px;font-size:13px;font-weight:500;display:none;text-align:left}
+.r-actions{margin-top:22px;display:flex;gap:10px;justify-content:center;flex-wrap:wrap}
+@keyframes fadeUp{from{opacity:0;transform:translateY(12px)}to{opacity:1;transform:none}}
+.fu{animation:fadeUp .35s ease forwards}
+.cf-piece{position:fixed;pointer-events:none;z-index:9999;width:7px;height:7px;border-radius:2px}
+@media(max-width:600px){
+  .mcq-grid{grid-template-columns:1fr}.stat-row{grid-template-columns:repeat(2,1fr)}
+  .qcard{padding:18px 14px}.bkdn{grid-template-columns:1fr}.r-iq{font-size:60px}
+  .fig-opt svg{width:55px;height:55px}
+}
+</style>
+</head>
+<body>
+<canvas id="cvs"></canvas>
+
+<!-- INTRO -->
+<div id="intro" class="scr">
+  <div class="eyebrow">Earthlink Telecommunications Group</div>
+  <h1 class="hero">Cognitive<br>Assessment</h1>
+  <p class="lead">A multi-dimensional IQ test with rich figure-matching, matrix reasoning, shape sequences, and more — fully randomised from a 250+ question bank.</p>
+  <div class="stat-row">
+    <div class="stat"><div class="stat-n">40</div><div class="stat-l">Questions</div></div>
+    <div class="stat"><div class="stat-n">30</div><div class="stat-l">Minutes</div></div>
+    <div class="stat"><div class="stat-n">5</div><div class="stat-l">Domains</div></div>
+    <div class="stat"><div class="stat-n">9</div><div class="stat-l">Q Types</div></div>
+  </div>
+  <div class="field">
+    <label>Candidate Full Name</label>
+    <input id="cname" type="text" placeholder="Enter your name to begin…" autocomplete="off">
+  </div>
+  <button class="btn" id="go-btn" disabled>Begin Assessment →</button>
+</div>
+
+<!-- SPLASH -->
+<div id="splash-scr" class="scr off">
+  <div class="splash fu" id="splash-card">
+    <div class="splash-ico" id="sp-ico">🔷</div>
+    <div class="badge" id="sp-badge">Section 1 of 5</div>
+    <h2 id="sp-title">Figure Matching</h2>
+    <p id="sp-desc">Visual patterns, shape matrices, and spatial reasoning.</p>
+    <div class="type-pills" id="sp-pills"></div>
+    <div class="splash-meta">
+      <span>⏱ <span id="sp-n">8</span> questions</span>
+      <span>🎲 Randomised each session</span>
+    </div>
+    <button class="btn" id="sp-go-btn">Start Section →</button>
+  </div>
+</div>
+
+<!-- QUESTION -->
+<div id="qscr" class="scr off">
+  <div class="topbar">
+    <span class="sec-tag" id="sec-tag">—</span>
+    <div class="prog-track"><div class="prog-bar" id="prog-bar" style="width:0%"></div></div>
+    <span class="q-ctr" id="q-ctr">1 / 40</span>
+    <span class="clock" id="clock">30:00</span>
+  </div>
+  <div class="qcard fu" id="qcard">
+    <span class="q-kind" id="q-kind">Figure Matching</span>
+    <div class="q-stem" id="q-stem"></div>
+    <div class="q-hint" id="q-hint" style="display:none"></div>
+    <div id="q-body"></div>
+    <div class="fb" id="fb"></div>
+    <div class="q-actions">
+      <button class="skip-btn" id="skip-btn">Skip →</button>
+      <button class="btn" id="action-btn">Confirm →</button>
+    </div>
+  </div>
+</div>
+
+<!-- RESULTS -->
+<div id="result-scr" class="scr off">
+  <div class="rcard fu">
+    <div class="r-lbl">Estimated IQ — <span id="r-name"></span></div>
+    <div class="r-iq" id="r-iq">—</div>
+    <div class="r-band" id="r-band">—</div>
+    <div class="bell-box"><canvas id="bell-cvs" height="90"></canvas></div>
+    <div class="bkdn" id="bkdn"></div>
+    <p style="font-size:12px;color:var(--sub);line-height:1.65">
+      Score derived from a randomised selection across 9 question types including extensive figure-matching,<br>matrix reasoning, shape sequences, and spatial pattern recognition.<br>
+      For Earthlink Group HR use only.
+    </p>
+    <div class="sub-status" id="sub-status"></div>
+    <div class="r-actions">
+      <button class="btn-ghost" onclick="window.print()">⬇ Print / Save</button>
+      <button class="btn" onclick="location.reload()">New Test</button>
+    </div>
+  </div>
+</div>
+
+<script>
+(function(){
+'use strict';
+
+/* ══ STARFIELD ══ */
+var cvs=document.getElementById('cvs'),ctx2=cvs.getContext('2d'),stars=[];
+function resC(){cvs.width=innerWidth;cvs.height=innerHeight;}
+function initS(){stars=[];for(var i=0;i<150;i++)stars.push({x:Math.random()*cvs.width,y:Math.random()*cvs.height,r:Math.random()*1.3+.2,o:Math.random()*.5+.1,sp:Math.random()*.003+.001});}
+function drawS(){ctx2.clearRect(0,0,cvs.width,cvs.height);var t=Date.now();stars.forEach(function(s){var o=Math.max(.05,Math.min(.75,s.o+Math.sin(t*s.sp)*.28));ctx2.beginPath();ctx2.arc(s.x,s.y,s.r,0,Math.PI*2);ctx2.fillStyle='rgba(255,255,255,'+o+')';ctx2.fill();});requestAnimationFrame(drawS);}
+window.addEventListener('resize',function(){resC();initS();});resC();initS();drawS();
+
+/* ══════════════════════════════════════════
+   SVG SHAPE LIBRARY
+   All figures are built from these primitives
+══════════════════════════════════════════ */
+var C='#E2EAF4',BK='#0D1826',BL='#0EA5E9',PR='#8B5CF6',GR='#10B981',RD='#EF4444',YL='#F59E0B';
+
+function svg(w,h,content){
+  return '<svg viewBox="0 0 '+w+' '+h+'" xmlns="http://www.w3.org/2000/svg" style="background:transparent">'+content+'</svg>';
+}
+function rect(x,y,w,h,fill,stroke,sw){sw=sw||1.5;stroke=stroke||C;return '<rect x="'+x+'" y="'+y+'" width="'+w+'" height="'+h+'" fill="'+fill+'" stroke="'+stroke+'" stroke-width="'+sw+'"/>';}
+function circ(cx,cy,r,fill,stroke,sw){sw=sw||1.5;stroke=stroke||C;return '<circle cx="'+cx+'" cy="'+cy+'" r="'+r+'" fill="'+fill+'" stroke="'+stroke+'" stroke-width="'+sw+'"/>';}
+function tri(pts,fill,stroke,sw){sw=sw||1.5;stroke=stroke||C;return '<polygon points="'+pts+'" fill="'+fill+'" stroke="'+stroke+'" stroke-width="'+sw+'"/>';}
+function line(x1,y1,x2,y2,col,sw){sw=sw||1.5;col=col||C;return '<line x1="'+x1+'" y1="'+y1+'" x2="'+x2+'" y2="'+y2+'" stroke="'+col+'" stroke-width="'+sw+'"/>';}
+function dline(x1,y1,x2,y2,col,sw){sw=sw||1.5;col=col||C;return '<line x1="'+x1+'" y1="'+y1+'" x2="'+x2+'" y2="'+y2+'" stroke="'+col+'" stroke-width="'+sw+'" stroke-dasharray="4,3"/>';}
+function cross(cx,cy,s,col,sw){return line(cx-s,cy,cx+s,cy,col,sw)+line(cx,cy-s,cx,cy+s,col,sw);}
+function diamond(cx,cy,s,fill,stroke,sw){return tri((cx)+','+(cy-s)+' '+(cx+s)+','+(cy)+' '+(cx)+','+(cy+s)+' '+(cx-s)+','+(cy),fill,stroke,sw);}
+function hexStr(cx,cy,r){var pts='';for(var i=0;i<6;i++){var a=Math.PI/180*(60*i-30);pts+=(cx+r*Math.cos(a)).toFixed(1)+','+(cy+r*Math.sin(a)).toFixed(1)+' ';}return pts.trim();}
+function hex(cx,cy,r,fill,stroke,sw){return '<polygon points="'+hexStr(cx,cy,r)+'" fill="'+fill+'" stroke="'+stroke+'" stroke-width="'+(sw||1.5)+'"/>';}
+function star5(cx,cy,r1,r2,fill,stroke,sw){
+  var pts='';for(var i=0;i<10;i++){var a=Math.PI/180*(36*i-90);var r=i%2===0?r1:r2;pts+=(cx+r*Math.cos(a)).toFixed(1)+','+(cy+r*Math.sin(a)).toFixed(1)+' ';}
+  return '<polygon points="'+pts.trim()+'" fill="'+fill+'" stroke="'+stroke+'" stroke-width="'+(sw||1.5)+'"/>';
+}
+function arrow(x,y,dir,col){// dir: 0=right,1=down,2=left,3=up
+  var shapes=['M'+x+','+y+'l-10,6 0,-4 -14,0 0,-4 14,0 0,-4z',
+              'M'+x+','+y+'l-6,-10 4,0 0,-14 4,0 0,14 4,0z',
+              'M'+x+','+y+'l10,-6 0,4 14,0 0,4 -14,0 0,4z',
+              'M'+x+','+y+'l6,10 -4,0 0,14 -4,0 0,-14 -4,0z'];
+  return '<path d="'+shapes[dir]+'" fill="'+(col||C)+'"/>';
+}
+function dot(cx,cy,r,fill){fill=fill||C;return circ(cx,cy,r||4,fill,'none',0);}
+function grpTx(content,tx,ty){return '<g transform="translate('+tx+','+ty+')">'+content+'</g>';}
+function grpRot(content,deg,cx,cy){return '<g transform="rotate('+deg+','+(cx||50)+','+(cy||50)+')">'+content+'</g>';}
+
+/* ══════════════════════════════════════════
+   FIGURE GENERATORS
+   Each returns an SVG string for a 100×100 cell
+══════════════════════════════════════════ */
+var F={
+  /* Shapes */
+  sqFill:  function(c){return svg(100,100,rect(20,20,60,60,c,c));},
+  sqHollow:function(c){return svg(100,100,rect(20,20,60,60,'none',c,2.5));},
+  sqSmall: function(c){return svg(100,100,rect(30,30,40,40,c,c));},
+  sqLarge: function(c){return svg(100,100,rect(10,10,80,80,c,c));},
+  circFill:function(c){return svg(100,100,circ(50,50,30,c,c));},
+  circHollow:function(c){return svg(100,100,circ(50,50,30,'none',c,2.5));},
+  circSmall:function(c){return svg(100,100,circ(50,50,18,c,c));},
+  circLarge:function(c){return svg(100,100,circ(50,50,40,c,c));},
+  triFill: function(c){return svg(100,100,tri('50,15 85,85 15,85',c,c));},
+  triHollow:function(c){return svg(100,100,tri('50,15 85,85 15,85','none',c,2.5));},
+  triDown: function(c){return svg(100,100,tri('50,85 85,15 15,15',c,c));},
+  triRight:function(c){return svg(100,100,tri('15,15 85,50 15,85',c,c));},
+  triLeft: function(c){return svg(100,100,tri('85,15 15,50 85,85',c,c));},
+  diamFill:function(c){return svg(100,100,diamond(50,50,38,c,c));},
+  diamHollow:function(c){return svg(100,100,diamond(50,50,38,'none',c,2.5));},
+  hexFill: function(c){return svg(100,100,hex(50,50,36,c,c));},
+  hexHollow:function(c){return svg(100,100,hex(50,50,36,'none',c,2.5));},
+  starFill:function(c){return svg(100,100,star5(50,50,36,18,c,c));},
+  starHollow:function(c){return svg(100,100,star5(50,50,36,18,'none',c,2.5));},
+  cross:   function(c){return svg(100,100,rect(35,15,30,70,c,c)+rect(15,35,70,30,c,c));},
+  pentagon:function(c){return svg(100,100,'<polygon points="50,12 88,40 74,85 26,85 12,40" fill="'+c+'" stroke="'+c+'" stroke-width="1.5"/>');},
+
+  /* Arrows */
+  arrowR:  function(c){return svg(100,100,'<path d="M20,44 L65,44 L65,34 L82,50 L65,66 L65,56 L20,56z" fill="'+(c||C)+'"/>');},
+  arrowL:  function(c){return svg(100,100,'<path d="M80,44 L35,44 L35,34 L18,50 L35,66 L35,56 L80,56z" fill="'+(c||C)+'"/>');},
+  arrowU:  function(c){return svg(100,100,'<path d="M44,80 L44,35 L34,35 L50,18 L66,35 L56,35 L56,80z" fill="'+(c||C)+'"/>');},
+  arrowD:  function(c){return svg(100,100,'<path d="M44,20 L44,65 L34,65 L50,82 L66,65 L56,65 L56,20z" fill="'+(c||C)+'"/>');},
+
+  /* Dots */
+  dot1:    function(c){return svg(100,100,dot(50,50,8,c));},
+  dot2:    function(c){return svg(100,100,dot(35,50,8,c)+dot(65,50,8,c));},
+  dot3:    function(c){return svg(100,100,dot(30,50,7,c)+dot(50,50,7,c)+dot(70,50,7,c));},
+  dot4:    function(c){return svg(100,100,dot(33,33,7,c)+dot(67,33,7,c)+dot(33,67,7,c)+dot(67,67,7,c));},
+  dot5:    function(c){return svg(100,100,dot(33,33,6,c)+dot(67,33,6,c)+dot(50,50,6,c)+dot(33,67,6,c)+dot(67,67,6,c));},
+  dot6:    function(c){return svg(100,100,dot(30,33,6,c)+dot(70,33,6,c)+dot(30,50,6,c)+dot(70,50,6,c)+dot(30,67,6,c)+dot(70,67,6,c));},
+  dotTL:   function(c){return svg(100,100,dot(30,30,8,c));},
+  dotTR:   function(c){return svg(100,100,dot(70,30,8,c));},
+  dotBL:   function(c){return svg(100,100,dot(30,70,8,c));},
+  dotBR:   function(c){return svg(100,100,dot(70,70,8,c));},
+  dotTC:   function(c){return svg(100,100,dot(50,25,8,c));},
+  dotBC:   function(c){return svg(100,100,dot(50,75,8,c));},
+  dotLC:   function(c){return svg(100,100,dot(25,50,8,c));},
+  dotRC:   function(c){return svg(100,100,dot(75,50,8,c));},
+
+  /* Lines */
+  hLine:   function(c){return svg(100,100,line(15,50,85,50,c,2.5));},
+  vLine:   function(c){return svg(100,100,line(50,15,50,85,c,2.5));},
+  diag1:   function(c){return svg(100,100,line(15,15,85,85,c,2.5));},
+  diag2:   function(c){return svg(100,100,line(85,15,15,85,c,2.5));},
+  dHLine:  function(c){return svg(100,100,dline(15,50,85,50,c,2.5));},
+  dVLine:  function(c){return svg(100,100,dline(50,15,50,85,c,2.5));},
+  crossLines:function(c){return svg(100,100,line(15,50,85,50,c,2)+line(50,15,50,85,c,2));},
+  xLines:  function(c){return svg(100,100,line(15,15,85,85,c,2)+line(85,15,15,85,c,2));},
+
+  /* Shading patterns */
+  sqHalfL: function(c){return svg(100,100,rect(20,20,30,60,c,C,1.5)+rect(50,20,30,60,'none',C,1.5));},
+  sqHalfR: function(c){return svg(100,100,rect(20,20,30,60,'none',C,1.5)+rect(50,20,30,60,c,C,1.5));},
+  sqHalfT: function(c){return svg(100,100,rect(20,20,60,30,c,C,1.5)+rect(20,50,60,30,'none',C,1.5));},
+  sqHalfB: function(c){return svg(100,100,rect(20,20,60,30,'none',C,1.5)+rect(20,50,60,30,c,C,1.5));},
+  sqQ1:    function(c){return svg(100,100,rect(20,20,30,30,c,C,1.5)+rect(50,20,30,30,'none',C,1.5)+rect(20,50,30,30,'none',C,1.5)+rect(50,50,30,30,'none',C,1.5));},
+  sqQ2:    function(c){return svg(100,100,rect(20,20,30,30,'none',C,1.5)+rect(50,20,30,30,c,C,1.5)+rect(20,50,30,30,'none',C,1.5)+rect(50,50,30,30,'none',C,1.5));},
+  sqQ3:    function(c){return svg(100,100,rect(20,20,30,30,'none',C,1.5)+rect(50,20,30,30,'none',C,1.5)+rect(20,50,30,30,c,C,1.5)+rect(50,50,30,30,'none',C,1.5));},
+  sqQ4:    function(c){return svg(100,100,rect(20,20,30,30,'none',C,1.5)+rect(50,20,30,30,'none',C,1.5)+rect(20,50,30,30,'none',C,1.5)+rect(50,50,30,30,c,C,1.5));},
+  sqQ12:   function(c){return svg(100,100,rect(20,20,30,30,c,C,1.5)+rect(50,20,30,30,c,C,1.5)+rect(20,50,30,30,'none',C,1.5)+rect(50,50,30,30,'none',C,1.5));},
+  sqQ34:   function(c){return svg(100,100,rect(20,20,30,30,'none',C,1.5)+rect(50,20,30,30,'none',C,1.5)+rect(20,50,30,30,c,C,1.5)+rect(50,50,30,30,c,C,1.5));},
+  sqQ13:   function(c){return svg(100,100,rect(20,20,30,30,c,C,1.5)+rect(50,20,30,30,'none',C,1.5)+rect(20,50,30,30,c,C,1.5)+rect(50,50,30,30,'none',C,1.5));},
+  sqQ24:   function(c){return svg(100,100,rect(20,20,30,30,'none',C,1.5)+rect(50,20,30,30,c,C,1.5)+rect(20,50,30,30,'none',C,1.5)+rect(50,50,30,30,c,C,1.5));},
+  sqAllFour:function(c){return svg(100,100,rect(20,20,30,30,c,C,1.5)+rect(50,20,30,30,c,C,1.5)+rect(20,50,30,30,c,C,1.5)+rect(50,50,30,30,c,C,1.5));},
+
+  /* Nested shapes */
+  sqInCirc:function(c,c2){c2=c2||BK;return svg(100,100,circ(50,50,38,c,C,2)+rect(30,30,40,40,c2,C,2));},
+  circInSq:function(c,c2){c2=c2||BK;return svg(100,100,rect(15,15,70,70,c,C,2)+circ(50,50,25,c2,C,2));},
+  triInCirc:function(c,c2){c2=c2||BK;return svg(100,100,circ(50,50,38,c,C,2)+tri('50,25 72,68 28,68',c2,C,2));},
+  circInTri:function(c,c2){c2=c2||BK;return svg(100,100,tri('50,12 88,82 12,82',c,C,2)+circ(50,55,22,c2,C,2));},
+  sqInDiam: function(c,c2){c2=c2||BK;return svg(100,100,diamond(50,50,40,c,C,2)+rect(30,30,40,40,c2,C,2));},
+
+  /* Composite */
+  circAndSq:function(c){return svg(100,100,circ(30,50,18,c,C,1.5)+rect(52,32,36,36,c,C,1.5));},
+  triAndCirc:function(c){return svg(100,100,tri('25,20 45,60 5,60',c,C,1.5)+circ(70,42,20,c,C,1.5));},
+  twoCircs: function(c){return svg(100,100,circ(33,50,22,c,C,2)+circ(67,50,22,'none',C,2));},
+  threeShapes:function(c){return svg(100,100,tri('50,15 65,40 35,40',c,C,1.5)+rect(30,45,40,20,c,C,1.5)+circ(50,78,12,c,C,1.5));},
+  hollow3:  function(){return svg(100,100,circ(50,50,38,'none',C,2.5)+rect(28,28,44,44,'none',C,2)+tri('50,18 78,72 22,72','none',C,2));},
+
+  /* Rotation helpers */
+  sqRot:   function(deg,c){return svg(100,100,'<g transform="rotate('+deg+',50,50)">'+rect(25,25,50,50,c,C,2)+'</g>');},
+  triRot:  function(deg,c){return svg(100,100,'<g transform="rotate('+deg+',50,50)">'+tri('50,18 78,72 22,72',c,C,2)+'</g>');},
+  arrowRot:function(deg,c){return svg(100,100,'<g transform="rotate('+deg+',50,50)"><path d="M20,44 L65,44 L65,34 L82,50 L65,66 L65,56 L20,56z" fill="'+(c||C)+'"/></g>');},
+
+  /* empty */
+  empty: function(){return svg(100,100,'');}
+};
+
+/* ══════════════════════════════════════════
+   SECTIONS
+══════════════════════════════════════════ */
+var SECS=[
+  {id:'fig', ico:'🔷', title:'Figure Matching & Matrices',
+   desc:'Shape matrices, pattern sequences, spatial transformations, and visual analogies.',
+   types:['Shape Matrix','Figure Sequence','Mirror/Rotation','Dot Patterns','Visual Analogy','Odd Shape Out']},
+  {id:'spa', ico:'🧩', title:'Spatial & Visual Reasoning',
+   desc:'Shading patterns, symbol grids, nested shapes, and figure continuation.',
+   types:['Shading Pattern','Symbol Grid','Nested Shapes','Figure Analogy']},
+  {id:'num', ico:'🧮', title:'Numerical Reasoning',
+   desc:'Number series, arithmetic, algebra, ratios, and age problems.',
+   types:['Number Series','Algebra','Ratio & %','Age Problems','Number Grid']},
+  {id:'ver', ico:'📖', title:'Verbal & Linguistic',
+   desc:'Analogies, odd-one-out, vocabulary, anagrams, word bridges, and coded phrases.',
+   types:['Analogies','Odd One Out','Anagram','Word Bridge','Vocabulary']},
+  {id:'wm',  ico:'🧠', title:'Working Memory & Logic',
+   desc:'Multi-step reasoning, syllogisms, probability, and memory recall.',
+   types:['Syllogism','Probability','Multi-step','Memory Recall','Compound Words']}
+];
+
+/* ══════════════════════════════════════════
+   QUESTION BANK
+   t = mcq | inp | seq | fig | anagram | bridge | coded
+   For fig questions:
+     cells = array of SVG strings for the grid (null = blank cell)
+     opts  = array of SVG strings for the answer options
+     gridCols = columns in main grid
+     optCols  = columns for answer row
+══════════════════════════════════════════ */
+var BANK=[];
+
+/* ══════════════════════════════════════════
+   FIGURE QUESTIONS — Section 'fig'
+══════════════════════════════════════════ */
+
+/* --- SHAPE MATRICES 3×3 --- */
+// Matrix 1: Shapes change colour across rows: white→grey→black
+BANK.push({g:'fig',t:'fig',stem:'Which figure completes the 3×3 matrix?',
+  gridCols:3,optCols:4,cellSize:80,optSize:70,
+  cells:[F.sqHollow(C),F.sqHollow(BL),F.sqFill(BL),
+         F.circHollow(C),F.circHollow(BL),F.circFill(BL),
+         F.triHollow(C),F.triHollow(BL),null],
+  opts:[F.triFill(BL),F.triHollow(C),F.triFill(C),F.triDown(BL)],
+  ans:0,why:'Pattern: each row goes hollow-white → hollow-blue → filled-blue. Row 3 triangle must be filled blue.'});
+
+// Matrix 2: Shapes rotate 45° clockwise each column
+BANK.push({g:'fig',t:'fig',stem:'Which figure completes the 3×3 matrix?',
+  gridCols:3,optCols:4,cellSize:80,optSize:70,
+  cells:[F.arrowR(C),F.arrowD(C),F.arrowL(C),
+         F.arrowR(BL),F.arrowD(BL),F.arrowL(BL),
+         F.arrowR(PR),F.arrowD(PR),null],
+  opts:[F.arrowL(PR),F.arrowU(PR),F.arrowR(PR),F.arrowD(C)],
+  ans:0,why:'Each row: right→down→left. Third row third column = left arrow in purple.'});
+
+// Matrix 3: Number of sides increases across row, size decreases down column
+BANK.push({g:'fig',t:'fig',stem:'Which figure completes the 3×3 matrix?',
+  gridCols:3,optCols:4,cellSize:80,optSize:70,
+  cells:[F.triFill(C),F.sqFill(C),F.pentagon(C),
+         F.triSmall||F.triFill(BL),F.sqSmall(BL),F.pentagon(BL)||F.pentagon(BL),
+         F.triDown(PR),F.sqHollow(PR),null],
+  opts:[F.pentagon(PR),F.hexFill(PR),F.pentagon(BL),F.circFill(PR)],
+  ans:0,why:'Column 3: pentagon, pentagon-blue, pentagon-purple.'});
+
+// Matrix 4: Dots increase 1,2,3 in each row
+BANK.push({g:'fig',t:'fig',stem:'Which figure completes the 3×3 matrix?',
+  gridCols:3,optCols:4,cellSize:80,optSize:70,
+  cells:[F.dot1(C),F.dot2(C),F.dot3(C),
+         F.dot2(BL),F.dot3(BL),F.dot4(BL),
+         F.dot3(PR),F.dot4(PR),null],
+  opts:[F.dot5(PR),F.dot6(PR),F.dot4(PR),F.dot3(C)],
+  ans:0,why:'Pattern: each row starts at n and adds 1 each cell. Row 3: 3,4,5 dots.'});
+
+// Matrix 5: Shape colour rotates through columns
+BANK.push({g:'fig',t:'fig',stem:'Which figure completes the 3×3 matrix?',
+  gridCols:3,optCols:4,cellSize:80,optSize:70,
+  cells:[F.circFill(C),F.circFill(BL),F.circFill(PR),
+         F.circFill(PR),F.circFill(C),F.circFill(BL),
+         F.circFill(BL),F.circFill(PR),null],
+  opts:[F.circFill(C),F.circFill(BL),F.circFill(PR),F.circHollow(C)],
+  ans:0,why:'Each row cycles C→BL→PR, shifted. Row 3 col 3 = white (C).'});
+
+// Matrix 6: Lines in corners — one line added per step
+BANK.push({g:'fig',t:'fig',stem:'Which figure completes the 3×3 matrix?\n(Count the diagonal lines inside each square)',
+  gridCols:3,optCols:4,cellSize:80,optSize:70,
+  cells:[svg(100,100,rect(15,15,70,70,'none',C,2)),
+         svg(100,100,rect(15,15,70,70,'none',C,2)+line(15,15,85,85,C,2)),
+         svg(100,100,rect(15,15,70,70,'none',C,2)+line(15,15,85,85,C,2)+line(85,15,15,85,C,2)),
+         svg(100,100,rect(15,15,70,70,'none',C,2)+line(15,15,85,85,C,2)+line(85,15,15,85,C,2)+line(15,50,85,50,C,2)),
+         svg(100,100,rect(15,15,70,70,'none',C,2)+line(15,15,85,85,C,2)+line(85,15,15,85,C,2)+line(15,50,85,50,C,2)+line(50,15,50,85,C,2)),
+         svg(100,100,rect(15,15,70,70,'none',C,2)+line(15,15,85,85,C,2)+line(85,15,15,85,C,2)+line(15,50,85,50,C,2)+line(50,15,50,85,C,2)+line(15,85,85,15,C,2)),
+         svg(100,100,rect(15,15,70,70,BL,BL)),
+         svg(100,100,rect(15,15,70,70,BL,BL)+rect(25,25,50,50,'none',C,2)),
+         null],
+  opts:[svg(100,100,rect(15,15,70,70,BL,BL)+rect(25,25,50,50,'none',C,2)+line(25,25,75,75,C,2)),
+        svg(100,100,rect(15,15,70,70,BL,BL)+line(25,25,75,75,C,2)),
+        svg(100,100,rect(15,15,70,70,'none',C,2)+rect(25,25,50,50,'none',C,2)),
+        svg(100,100,rect(15,15,70,70,BL,BL)+rect(25,25,50,50,C,C))],
+  ans:0,why:'Row 3: blue filled square, blue sq+hollow inner sq, blue sq+hollow+diagonal. Answer A.'});
+
+// Matrix 7: Three shapes — each appears once per row and column (like sudoku)
+BANK.push({g:'fig',t:'fig',stem:'Which figure completes the 3×3 matrix?\n(Each shape appears exactly once in every row and column)',
+  gridCols:3,optCols:4,cellSize:80,optSize:70,
+  cells:[F.circFill(C),F.sqFill(C),F.triFill(C),
+         F.sqFill(C),F.triFill(C),F.circFill(C),
+         F.triFill(C),null,F.sqFill(C)],
+  opts:[F.circFill(C),F.sqFill(C),F.triFill(C),F.diamFill(C)],
+  ans:0,why:'Row 3 has triangle and square. Column 2 has square and triangle. Missing = circle.'});
+
+// Matrix 8: Size increases across columns
+BANK.push({g:'fig',t:'fig',stem:'Which figure completes the 3×3 matrix?',
+  gridCols:3,optCols:4,cellSize:80,optSize:70,
+  cells:[F.circSmall(C),svg(100,100,circ(50,50,25,C,C)),F.circLarge(C),
+         F.circSmall(BL),svg(100,100,circ(50,50,25,BL,BL)),F.circLarge(BL),
+         F.circSmall(PR),svg(100,100,circ(50,50,25,PR,PR)),null],
+  opts:[F.circLarge(PR),F.circSmall(PR),F.circHollow(PR),F.circLarge(BL)],
+  ans:0,why:'Each row: small→medium→large circle, same colour. Row 3 = large purple circle.'});
+
+// Matrix 9: Shading quadrant rotates clockwise
+BANK.push({g:'fig',t:'fig',stem:'Which figure completes the 3×3 matrix?\n(Which quadrant is shaded?)',
+  gridCols:3,optCols:4,cellSize:80,optSize:70,
+  cells:[F.sqQ1(BL),F.sqQ2(BL),F.sqQ3(BL),
+         F.sqQ4(BL),F.sqQ1(BL),F.sqQ2(BL),
+         F.sqQ3(BL),F.sqQ4(BL),null],
+  opts:[F.sqQ1(BL),F.sqQ2(BL),F.sqQ3(BL),F.sqAllFour(BL)],
+  ans:0,why:'Pattern cycles Q1→Q2→Q3→Q4→Q1... Position 9 = Q1.'});
+
+// Matrix 10: Inner shape grows across columns
+BANK.push({g:'fig',t:'fig',stem:'Which figure completes the 3×3 matrix?',
+  gridCols:3,optCols:4,cellSize:80,optSize:70,
+  cells:[F.sqHollow(C),F.circInSq(C,BL),F.sqInCirc(C,BL),
+         F.sqHollow(BL),F.circInSq(BL,C),F.sqInCirc(BL,C),
+         F.sqHollow(PR),F.circInSq(PR,C),null],
+  opts:[F.sqInCirc(PR,C),F.triInCirc(PR,C),F.sqInCirc(C,PR),F.circInSq(C,PR)],
+  ans:0,why:'Column 3: square-in-circle with colour swap. Row 3 = square-in-circle, purple outer, white inner.'});
+
+/* --- FIGURE SEQUENCES --- */
+// Sequence 1: Arrow rotates 90° clockwise each step
+BANK.push({g:'fig',t:'fig',stem:'Which figure comes NEXT in the sequence?',
+  gridCols:5,optCols:4,cellSize:75,optSize:68,isSeq:true,
+  cells:[F.arrowR(C),F.arrowD(C),F.arrowL(C),F.arrowU(C),null],
+  opts:[F.arrowR(C),F.arrowD(C),F.arrowL(C),F.arrowU(C)],
+  ans:0,why:'Arrow rotates 90° clockwise each step: R→D→L→U→R.'});
+
+// Sequence 2: Shape gains one side each step
+BANK.push({g:'fig',t:'fig',stem:'Which figure comes NEXT in the sequence?',
+  gridCols:5,optCols:4,cellSize:75,optSize:68,isSeq:true,
+  cells:[F.triFill(BL),F.sqFill(BL),F.pentagon(BL),F.hexFill(BL),null],
+  opts:[F.starFill(BL),F.hexFill(C),F.circFill(BL),F.hexHollow(BL)],
+  ans:2,why:'3,4,5,6 sides — next = circle (infinite sides). But logically: next = 7-sided or circle. Answer: circle.'});
+
+// Sequence 3: Dot count increases by 1 each step
+BANK.push({g:'fig',t:'fig',stem:'Which figure comes NEXT in the sequence?',
+  gridCols:5,optCols:4,cellSize:75,optSize:68,isSeq:true,
+  cells:[F.dot1(C),F.dot2(C),F.dot3(C),F.dot4(C),null],
+  opts:[F.dot5(C),F.dot6(C),F.dot4(C),F.dot3(BL)],
+  ans:0,why:'Dots increase by 1 each step. 5 dots next.'});
+
+// Sequence 4: Shape fills alternate black/white
+BANK.push({g:'fig',t:'fig',stem:'Which figure comes NEXT in the sequence?',
+  gridCols:5,optCols:4,cellSize:75,optSize:68,isSeq:true,
+  cells:[F.circFill(C),F.circHollow(C),F.circFill(BL),F.circHollow(BL),null],
+  opts:[F.circFill(PR),F.circHollow(PR),F.circFill(C),F.circHollow(C)],
+  ans:0,why:'Pattern: filled/hollow alternates; colour cycles white→blue→purple. Next = filled purple.'});
+
+// Sequence 5: Square grows then shrinks
+BANK.push({g:'fig',t:'fig',stem:'Which figure comes NEXT in the sequence?',
+  gridCols:5,optCols:4,cellSize:75,optSize:68,isSeq:true,
+  cells:[F.sqSmall(C),F.sqFill(C),F.sqLarge(C),F.sqFill(C),null],
+  opts:[F.sqSmall(C),F.sqLarge(C),F.sqHollow(C),F.sqFill(BL)],
+  ans:0,why:'Small→medium→large→medium→small. Pattern peaks at large then shrinks.'});
+
+// Sequence 6: Shape moves clockwise around corners
+BANK.push({g:'fig',t:'fig',stem:'Which figure comes NEXT in the sequence?\n(Track where the dot is positioned)',
+  gridCols:5,optCols:4,cellSize:75,optSize:68,isSeq:true,
+  cells:[F.dotTL(BL),F.dotTR(BL),F.dotBR(BL),F.dotBL(BL),null],
+  opts:[F.dotTL(BL),F.dotTC(BL),F.dotBL(BL),F.dotTR(BL)],
+  ans:0,why:'Dot moves clockwise: TL→TR→BR→BL→TL.'});
+
+// Sequence 7: Inner shape shrinks while outer stays same
+BANK.push({g:'fig',t:'fig',stem:'Which figure comes NEXT in the sequence?',
+  gridCols:5,optCols:4,cellSize:75,optSize:68,isSeq:true,
+  cells:[F.sqInCirc(C,C),F.circInSq(C,BL),F.triInCirc(C,BL),F.circInTri(C,BL),null],
+  opts:[F.sqInDiam(C,BL),F.sqInCirc(C,BL),F.triInCirc(BL,C),F.circFill(C)],
+  ans:0,why:'Outer shape cycles: circle,square,circle,triangle → diamond. Inner always the opposite.'});
+
+// Sequence 8: Lines multiply
+BANK.push({g:'fig',t:'fig',stem:'Which figure comes NEXT in the sequence?\n(Count the lines in each frame)',
+  gridCols:5,optCols:4,cellSize:75,optSize:68,isSeq:true,
+  cells:[svg(100,100,line(50,20,50,80,C,2.5)),
+         svg(100,100,line(50,20,50,80,C,2.5)+line(20,50,80,50,C,2.5)),
+         svg(100,100,line(50,20,50,80,C,2.5)+line(20,50,80,50,C,2.5)+line(20,20,80,80,C,2.5)),
+         svg(100,100,line(50,20,50,80,C,2.5)+line(20,50,80,50,C,2.5)+line(20,20,80,80,C,2.5)+line(80,20,20,80,C,2.5)),
+         null],
+  opts:[svg(100,100,line(50,20,50,80,C,2.5)+line(20,50,80,50,C,2.5)+line(20,20,80,80,C,2.5)+line(80,20,20,80,C,2.5)+line(35,15,65,85,C,2.5)),
+        svg(100,100,line(50,20,50,80,C,2.5)+line(20,50,80,50,C,2.5)+line(20,20,80,80,C,2.5)+line(80,20,20,80,C,2.5)+circ(50,50,30,'none',C,2.5)),
+        svg(100,100,line(50,20,50,80,C,2.5)+line(20,50,80,50,C,2.5)+line(20,20,80,80,C,2.5)+line(80,20,20,80,C,2.5)+rect(20,20,60,60,'none',C,2)),
+        svg(100,100,line(20,20,80,80,C,2.5)+line(80,20,20,80,C,2.5))],
+  ans:0,why:'+1 line per step. 5th has 5 lines (added diagonal).'});
+
+/* --- MIRROR & ROTATION --- */
+// Mirror 1: Left-right mirror
+BANK.push({g:'fig',t:'fig',stem:'The figure on the left is reflected. Which is its MIRROR IMAGE (left-right reflection)?',
+  gridCols:1,optCols:4,cellSize:100,optSize:75,isMirror:true,
+  cells:[svg(100,100,tri('20,80 20,20 75,50',C,C,2))],
+  opts:[svg(100,100,tri('80,80 80,20 25,50',C,C,2)),
+        svg(100,100,tri('20,80 20,20 75,50',C,C,2)),
+        svg(100,100,tri('20,20 80,20 50,80',C,C,2)),
+        svg(100,100,tri('80,20 80,80 25,50',C,C,2))],
+  ans:0,why:'Left-right mirror of a leftward-pointing triangle points right.'});
+
+// Mirror 2: Top-bottom mirror
+BANK.push({g:'fig',t:'fig',stem:'The figure on the left is reflected UPSIDE DOWN. Which is the result?',
+  gridCols:1,optCols:4,cellSize:100,optSize:75,isMirror:true,
+  cells:[svg(100,100,F.sqQ1(BL)+F.sqQ4(BL))],
+  opts:[svg(100,100,F.sqQ3(BL)+F.sqQ2(BL)),
+        svg(100,100,F.sqQ1(BL)+F.sqQ4(BL)),
+        svg(100,100,F.sqQ2(BL)+F.sqQ3(BL)),
+        svg(100,100,F.sqQ12(BL))],
+  ans:0,why:'Top-bottom flip: Q1→Q3, Q4→Q2.'});
+
+// Rotation 1: 90° clockwise
+BANK.push({g:'fig',t:'fig',stem:'The figure on the LEFT is rotated 90° CLOCKWISE. Which is the result?',
+  gridCols:1,optCols:4,cellSize:100,optSize:75,isMirror:true,
+  cells:[svg(100,100,F.arrowU(C))],
+  opts:[F.arrowR(C),F.arrowL(C),F.arrowD(C),F.arrowU(C)],
+  ans:0,why:'Up arrow rotated 90° clockwise = right arrow.'});
+
+// Rotation 2: 180°
+BANK.push({g:'fig',t:'fig',stem:'The figure is rotated 180°. Which is the result?',
+  gridCols:1,optCols:4,cellSize:100,optSize:75,isMirror:true,
+  cells:[svg(100,100,tri('20,80 50,20 80,80',C,C,2)+dot(50,55,7,BL))],
+  opts:[svg(100,100,tri('20,20 50,80 80,20',C,C,2)+dot(50,45,7,BL)),
+        svg(100,100,tri('20,80 50,20 80,80',C,C,2)+dot(50,55,7,BL)),
+        svg(100,100,tri('80,20 20,50 80,80',C,C,2)+dot(45,50,7,BL)),
+        svg(100,100,tri('20,20 80,50 20,80',C,C,2)+dot(55,50,7,BL))],
+  ans:0,why:'180° rotation: triangle flips upside-down, dot moves to upper half.'});
+
+/* --- VISUAL ANALOGIES A:B :: C:? --- */
+// Analogy 1: Hollow→Filled :: same for next shape
+BANK.push({g:'fig',t:'fig',stem:'The FIRST figure is to the SECOND as the THIRD is to which FOURTH?',
+  gridCols:4,optCols:4,cellSize:80,optSize:68,isAnalogy:true,
+  cells:[F.sqHollow(C),F.sqFill(C),F.circHollow(C),null],
+  opts:[F.circFill(C),F.sqFill(C),F.circHollow(C),F.triHollow(C)],
+  ans:0,why:'Hollow→Filled. Circle hollow→circle filled.'});
+
+// Analogy 2: Large→Small :: same for next
+BANK.push({g:'fig',t:'fig',stem:'The FIRST figure is to the SECOND as the THIRD is to which FOURTH?',
+  gridCols:4,optCols:4,cellSize:80,optSize:68,isAnalogy:true,
+  cells:[F.sqLarge(C),F.sqSmall(C),F.circLarge(C),null],
+  opts:[F.circSmall(C),F.circLarge(C),F.sqSmall(C),F.circHollow(C)],
+  ans:0,why:'Large→Small. Large circle → small circle.'});
+
+// Analogy 3: White→Blue colour change
+BANK.push({g:'fig',t:'fig',stem:'The FIRST figure is to the SECOND as the THIRD is to which FOURTH?',
+  gridCols:4,optCols:4,cellSize:80,optSize:68,isAnalogy:true,
+  cells:[F.triFill(C),F.triFill(BL),F.diamFill(C),null],
+  opts:[F.diamFill(BL),F.diamHollow(C),F.sqFill(BL),F.triFill(BL)],
+  ans:0,why:'White shape→blue shape. White diamond→blue diamond.'});
+
+// Analogy 4: Shape gains inner circle
+BANK.push({g:'fig',t:'fig',stem:'The FIRST figure is to the SECOND as the THIRD is to which FOURTH?',
+  gridCols:4,optCols:4,cellSize:80,optSize:68,isAnalogy:true,
+  cells:[F.sqHollow(C),F.circInSq(C,BL),F.circHollow(C),null],
+  opts:[F.sqInCirc(C,BL),F.circFill(BL),F.triInCirc(C,BL),F.circHollow(C)],
+  ans:0,why:'Outer shape gains a filled inner circle. Circle gains inner square → square-in-circle.'});
+
+// Analogy 5: Arrow direction flips vertically
+BANK.push({g:'fig',t:'fig',stem:'The FIRST figure is to the SECOND as the THIRD is to which FOURTH?',
+  gridCols:4,optCols:4,cellSize:80,optSize:68,isAnalogy:true,
+  cells:[F.arrowU(C),F.arrowD(C),F.arrowR(C),null],
+  opts:[F.arrowL(C),F.arrowR(C),F.arrowU(C),F.arrowD(C)],
+  ans:0,why:'Up→Down (vertical flip). Right→Left (same flip).'});
+
+/* --- DOT PATTERN MATCHING --- */
+// Dots in hexagon segments — find the odd one
+BANK.push({g:'fig',t:'fig',stem:'Which option CORRECTLY continues the dot pattern?\n(Each row: dot moves one step clockwise)',
+  gridCols:4,optCols:4,cellSize:80,optSize:70,isSeq:true,
+  cells:[F.dotTL(C),F.dotTC(C),F.dotTR(C),null],
+  opts:[F.dotRC(C),F.dotBR(C),F.dotTC(C),F.dotLC(C)],
+  ans:0,why:'Clockwise: TL→TC→TR→RC.'});
+
+BANK.push({g:'fig',t:'fig',stem:'Which option CORRECTLY continues the dot pattern?\n(Dot moves clockwise, 1 step = 45°)',
+  gridCols:4,optCols:4,cellSize:80,optSize:70,isSeq:true,
+  cells:[F.dotBR(BL),F.dotBC(BL),F.dotBL(BL),null],
+  opts:[F.dotLC(BL),F.dotTL(BL),F.dotBC(BL),F.dotRC(BL)],
+  ans:0,why:'Clockwise: BR→BC→BL→LC.'});
+
+/* --- ODD SHAPE OUT --- */
+BANK.push({g:'fig',t:'fig',stem:'Which figure is the ODD ONE OUT?\n(One differs from all others)',
+  gridCols:5,optCols:5,cellSize:75,optSize:68,isOddOut:true,
+  cells:[F.sqHollow(C),F.circHollow(C),F.triHollow(C),F.hexHollow(C),F.sqFill(C)],
+  opts:[],ans:4,why:'All others are hollow; square is filled. The 5th (index 4) is the odd one out.',
+  isDirectPick:true});
+
+BANK.push({g:'fig',t:'fig',stem:'Which figure is the ODD ONE OUT?\n(One figure cannot be rotated to match the others)',
+  gridCols:5,optCols:5,cellSize:75,optSize:68,isOddOut:true,
+  cells:[F.arrowR(C),F.arrowD(C),F.arrowL(C),F.arrowR(BL),F.arrowU(C)],
+  opts:[],ans:3,why:'All arrows are white except the 4th which is blue. Index 3 is the odd one.',
+  isDirectPick:true});
+
+BANK.push({g:'fig',t:'fig',stem:'Which figure is the ODD ONE OUT?\n(Shape that is different from all the rest)',
+  gridCols:5,optCols:5,cellSize:75,optSize:68,isOddOut:true,
+  cells:[F.circFill(BL),F.sqFill(BL),F.triFill(BL),F.circFill(BL),F.hexFill(C)],
+  opts:[],ans:4,why:'The 5th shape is white; all others are blue.',
+  isDirectPick:true});
+
+/* ══════════════════════════════════════════
+   SPATIAL SECTION — section 'spa'
+══════════════════════════════════════════ */
+// Symbol grid: carry-forward rule
+BANK.push({g:'spa',t:'fig',stem:'Which completes the pattern?\n(Only symbols appearing in BOTH of the first two squares carry to the third)',
+  gridCols:3,optCols:4,cellSize:90,optSize:72,
+  cells:[svg(100,100,circ(30,30,14,C,C)+circ(70,30,14,C,C)+rect(25,58,20,20,C,C)),
+         svg(100,100,circ(70,30,14,C,C)+rect(25,58,20,20,C,C)+circ(50,72,14,C,C)),
+         null],
+  opts:[svg(100,100,circ(70,30,14,C,C)+rect(25,58,20,20,C,C)),
+        svg(100,100,circ(30,30,14,C,C)+rect(25,58,20,20,C,C)),
+        svg(100,100,circ(30,30,14,C,C)+circ(70,30,14,C,C)),
+        svg(100,100,circ(70,30,14,C,C)+circ(50,72,14,C,C))],
+  ans:0,why:'Symbols in BOTH sq1 and sq2: top-right circle + left square = carry forward.'});
+
+// Symbol grid 2: symbols present in exactly one square cancel out
+BANK.push({g:'spa',t:'fig',stem:'Which completes the pattern?\n(Symbols present in only ONE of the first two squares carry forward; those in BOTH cancel out)',
+  gridCols:3,optCols:4,cellSize:90,optSize:72,
+  cells:[svg(100,100,circ(30,30,14,C,C)+rect(58,28,24,24,C,C)+circ(50,72,14,C,C)),
+         svg(100,100,circ(30,30,14,C,C)+rect(58,28,24,24,'none',C,2.5)+tri('50,60 70,90 30,90',C,C)),
+         null],
+  opts:[svg(100,100,rect(58,28,24,24,C,C)+tri('50,60 70,90 30,90',C,C)+circ(50,72,14,C,C)),
+        svg(100,100,circ(50,72,14,C,C)+tri('50,60 70,90 30,90',C,C)),
+        svg(100,100,circ(30,30,14,C,C)+rect(58,28,24,24,C,C)),
+        svg(100,100,circ(30,30,14,C,C)+tri('50,60 70,90 30,90',C,C))],
+  ans:1,why:'Circle-TL appears in both → cancelled. Bottom-circle + hollow-square + filled-square + triangle → unique ones = bottom-circle (sq1 only) + triangle (sq2 only).'});
+
+// Shading rotation
+BANK.push({g:'spa',t:'fig',stem:'Which completes the pattern?\n(Shading rotates one quadrant clockwise each step)',
+  gridCols:4,optCols:4,cellSize:75,optSize:68,isSeq:true,
+  cells:[F.sqQ1(BL),F.sqQ2(BL),F.sqQ3(BL),null],
+  opts:[F.sqQ4(BL),F.sqQ1(BL),F.sqQ12(BL),F.sqAllFour(BL)],
+  ans:0,why:'Q1→Q2→Q3→Q4.'});
+
+// Nested shapes pattern
+BANK.push({g:'spa',t:'fig',stem:'Which figure completes the 3×3 pattern?\n(Each column: shape changes from outer to inner)',
+  gridCols:3,optCols:4,cellSize:85,optSize:70,
+  cells:[F.sqHollow(C),F.circInSq(C,C),F.sqInCirc(C,C),
+         F.circHollow(C),F.sqInCirc(C,C),F.circInSq(C,C),
+         F.triHollow(C),F.circInTri(C,C),null],
+  opts:[F.triInCirc(C,C),F.sqInDiam(C,C),F.triHollow(C),F.circInSq(C,C)],
+  ans:0,why:'Column 3 pattern: sq-in-circ, circ-in-sq, tri-in-circ. Row 3 col 3 = tri-in-circle.'});
+
+// Dot inside shapes — three variants
+BANK.push({g:'spa',t:'fig',stem:'Which figure is MISSING?\n(Track the dot position and the outer shape)',
+  gridCols:3,optCols:4,cellSize:85,optSize:72,
+  cells:[svg(100,100,circ(50,50,38,'none',C,2)+dot(50,25,8,BL)),
+         svg(100,100,circ(50,50,38,'none',C,2)+dot(75,50,8,BL)),
+         svg(100,100,circ(50,50,38,'none',C,2)+dot(50,75,8,BL)),
+         svg(100,100,circ(50,50,38,'none',C,2)+dot(25,50,8,BL)),
+         svg(100,100,rect(15,15,70,70,'none',C,2)+dot(50,25,8,BL)),
+         svg(100,100,rect(15,15,70,70,'none',C,2)+dot(75,50,8,BL)),
+         svg(100,100,rect(15,15,70,70,'none',C,2)+dot(50,75,8,BL)),
+         svg(100,100,rect(15,15,70,70,'none',C,2)+dot(25,50,8,BL)),
+         null],
+  opts:[svg(100,100,tri('50,12 88,82 12,82','none',C,2)+dot(50,25,8,BL)),
+        svg(100,100,tri('50,12 88,82 12,82','none',C,2)+dot(50,75,8,BL)),
+        svg(100,100,tri('50,12 88,82 12,82','none',C,2)+dot(75,50,8,BL)),
+        svg(100,100,circ(50,50,38,'none',C,2)+dot(50,25,8,BL))],
+  ans:0,why:'Row 3: triangle outer shape. Dot position in row 3 starts at top = tri+dot-top.'});
+
+// Size progression
+BANK.push({g:'spa',t:'fig',stem:'Which figure completes the 3×3 matrix?\n(Size increases left to right, colour changes top to bottom)',
+  gridCols:3,optCols:4,cellSize:85,optSize:72,
+  cells:[F.sqSmall(C),F.sqFill(C),F.sqLarge(C),
+         F.sqSmall(BL),F.sqFill(BL),F.sqLarge(BL),
+         F.sqSmall(PR),F.sqFill(PR),null],
+  opts:[F.sqLarge(PR),F.sqLarge(BL),F.sqFill(PR),F.sqSmall(PR)],
+  ans:0,why:'Row 3 col 3 = large purple square.'});
+
+// Composite shape transformation
+BANK.push({g:'spa',t:'fig',stem:'Which figure is NEXT?\n(Each step: shapes swap fill and hollow)',
+  gridCols:4,optCols:4,cellSize:75,optSize:68,isSeq:true,
+  cells:[F.twoCircs(C),
+         svg(100,100,circ(33,50,22,'none',C,2)+circ(67,50,22,C,C)),
+         F.twoCircs(C),null],
+  opts:[svg(100,100,circ(33,50,22,'none',C,2)+circ(67,50,22,C,C)),
+        F.twoCircs(C),
+        svg(100,100,circ(33,50,22,C,C)+circ(67,50,22,'none',C,2)),
+        F.circFill(C)],
+  ans:0,why:'Alternates: filled+hollow → hollow+filled → filled+hollow → hollow+filled.'});
+
+/* ══════════════════════════════════════════
+   NUMERICAL SECTION
+══════════════════════════════════════════ */
+BANK.push({g:'num',t:'seq',stem:'What comes next?',seq:['0','1','2','4','6','9','12','16','?'],ans:'20',why:'Adds 1,1,2,2,3,3,4,4 → 16+4=20.'});
+BANK.push({g:'num',t:'inp',stem:'10, 30, 32, 96, 98, 294, 296, ?\nWhat is the next number?',ans:'888',why:'×3 then +2 alternating. 296×3=888.'});
+BANK.push({g:'num',t:'inp',stem:'100, 97.4, 94.8, ?, 89.6, 87\nWhat replaces the question mark?',ans:'92.2',why:'Subtract 2.6 each time.'});
+BANK.push({g:'num',t:'mcq',stem:'Complete the series:\n3,  7,  15,  31,  __',opts:['47','53','63','71'],ans:2,why:'×2 then +1. 31×2+1=63.'});
+BANK.push({g:'num',t:'inp',stem:'What is one-third of one-quarter of one-fifth of one-half of 120?',ans:'1',why:'120÷2=60÷5=12÷4=3÷3=1.'});
+BANK.push({g:'num',t:'mcq',stem:'If 5 men build a house in 16 days, how long will 2 men take?',opts:['30','35','40','45'],ans:2,why:'80 man-days ÷ 2 = 40.'});
+BANK.push({g:'num',t:'inp',stem:'72 eggs were cracked = 12% of consignment. How many in total?',ans:'600',why:'72÷12×100=600.'});
+BANK.push({g:'num',t:'mcq',stem:'Jack is twice Jill\'s age. In 5 years he will be 1.5× her age. How old is Jack now?',opts:['8','10','12','15'],ans:1,why:'Jack=10, Jill=5.'});
+BANK.push({g:'num',t:'inp',stem:'How many minutes before 12 noon if 48 min ago it was twice as many minutes past 9 am?',ans:'44',why:'132=3x → x=44.'});
+BANK.push({g:'num',t:'mcq',stem:'The average of 3 numbers is 48. Two average 56. What is the third?',opts:['24','28','32','36'],ans:2,why:'144−112=32.'});
+BANK.push({g:'num',t:'mcq',stem:'A man has 53 socks: 21 blue, 15 black, 17 red. In darkness, how many to guarantee a black pair?',opts:['38','39','40','41'],ans:2,why:'21+17+2=40.'});
+BANK.push({g:'num',t:'inp',stem:'1, 31, 59, 85, 109, ?\nWhat comes next?',ans:'131',why:'Differences 30,28,26,24,22. 109+22=131.'});
+BANK.push({g:'num',t:'mcq',stem:'Peter gets 2/5, Paul 0.55, Mary £45. What was the total?',opts:['£450','£750','£900','£1,000'],ans:2,why:'Mary=1/20=£45 → total=£900.'});
+BANK.push({g:'num',t:'inp',stem:'68 tomatoes mouldy = 16% of box. Total tomatoes?',ans:'425',why:'68÷16×100=425.'});
+BANK.push({g:'num',t:'mcq',stem:'How much does a bag of flour weigh if it weighs 1 kg plus half its own weight?',opts:['1 kg','1.5 kg','2 kg','2.5 kg'],ans:2,why:'W=1+W/2 → W=2 kg.'});
+BANK.push({g:'num',t:'mcq',stem:'1000, 865, ?, 595, 460, 325\nWhat replaces the question mark?',opts:['715','720','730','735'],ans:2,why:'−135 each time. 865−135=730.'});
+
+/* ══════════════════════════════════════════
+   VERBAL SECTION
+══════════════════════════════════════════ */
+BANK.push({g:'ver',t:'mcq',stem:'SWIFT is to SLOW as BRAVE is to…',opts:['Bold','Fearless','Cowardly','Strong'],ans:2,why:'Antonym pair.'});
+BANK.push({g:'ver',t:'mcq',stem:'Doctor : Hospital :: Pilot : ___',opts:['Airport','Airplane','Sky','Runway'],ans:1,why:'Works inside: pilot/airplane.'});
+BANK.push({g:'ver',t:'mcq',stem:'METICULOUS — closest in meaning?',opts:['Hasty','Careless','Precise','Ambitious'],ans:2,why:'Meticulous = very careful/precise.'});
+BANK.push({g:'ver',t:'mcq',stem:'Which is the ODD ONE OUT?\nheptagon, triangle, hexagon, cube, pentagon',opts:['heptagon','triangle','cube','pentagon'],ans:2,why:'Cube is 3D; others are 2D polygons.'});
+BANK.push({g:'ver',t:'mcq',stem:'Which is the ODD ONE OUT?\nCopper, Iron, Silver, Marble',opts:['Copper','Iron','Silver','Marble'],ans:3,why:'Marble is rock; others are metals.'});
+BANK.push({g:'ver',t:'anagram',stem:'OVATE GNOME is an anagram of which familiar phrase (3-1-4-2)?\nClue: make haste.',tiles:['O','V','A','T','E','G','N','O','M','E'],opts:['GET A MOVE ON','MOVE OUT GONE','TONE GAVE MO','OVEN GET MOAN'],ans:0,why:'GET A MOVE ON.'});
+BANK.push({g:'ver',t:'anagram',stem:'VEILED HARE is an anagram of two OPPOSITE words.',tiles:['V','E','I','L','E','D','H','A','R','E'],opts:['HIDE / REVEAL','LIVED / HARE','DIVER / WHALE','AVID / HEELER'],ans:0,why:'HIDE and REVEAL.'});
+BANK.push({g:'ver',t:'anagram',stem:'PURE AS TUFT is an anagram of two OPPOSITE words.',tiles:['P','U','R','E','A','S','T','U','F','T'],opts:['PAST / FUTURE','EARLY / AFTER','FAST / PURSE','PURE / TUFTS'],ans:0,why:'PAST and FUTURE.'});
+BANK.push({g:'ver',t:'bridge',stem:'Place a FOUR-LETTER WORD in the gap:\nRAM [____] RIDGE',bridgeData:{left:'RAM',right:'RIDGE'},opts:['PART','BOLT','MAST','FORD'],ans:0,why:'RAMPART + PARTRIDGE.'});
+BANK.push({g:'ver',t:'bridge',stem:'Place a word in the bracket:\nhome [____] fast',bridgeData:{left:'HOME',right:'FAST'},opts:['COME','STEAD','WORK','LAND'],ans:1,why:'HOMESTEAD + STEADFAST.'});
+BANK.push({g:'ver',t:'bridge',stem:'Place a word in the bracket:\nBLUE [____] OWED',bridgeData:{left:'BLUE',right:'OWED'},opts:['BELL','BIRD','CHIP','BOOK'],ans:0,why:'BLUEBELL + BELLOWED.'});
+BANK.push({g:'ver',t:'coded',stem:'Decode the phrase (initial letters and spaces removed):',codedData:{encoded:'USHHEOATUT'},opts:['PUSH THE BOAT OUT','RUSH THROUGH ABOUT','USE HASTE OUT THERE','PUSH HIS EGO ABOUT'],ans:0,why:'PUSH THE BOAT OUT.'});
+BANK.push({g:'ver',t:'coded',stem:'If 2=H are BTO means "Two heads are better than one", what does this mean?\n2 = S to ES',codedData:{encoded:'2 = S to ES'},opts:['Two steps to every solution','Two sides to every story','Two ships to every sea','Two senses to every saying'],ans:1,why:'Two sides to every story.'});
+BANK.push({g:'ver',t:'mcq',stem:'abyss : chasm :: fissure : ___',opts:['crevice','recess','gorge','canyon'],ans:0,why:'Synonyms: abyss/chasm, fissure/crevice.'});
+BANK.push({g:'ver',t:'mcq',stem:'LACONIC — what does it mean?',opts:['dull and uninspiring','tearful','using few words','emotionally unstable'],ans:2,why:'Laconic = brief/using few words.'});
+BANK.push({g:'ver',t:'mcq',stem:'Which is the ODD ONE OUT?\ncymbal, marimba, vibraphone, trombone, glockenspiel',opts:['cymbal','marimba','vibraphone','trombone'],ans:3,why:'Trombone is brass; others are percussion.'});
+
+/* ══════════════════════════════════════════
+   WORKING MEMORY SECTION
+══════════════════════════════════════════ */
+BANK.push({g:'wm',t:'mcq',stem:'Remember: 7, 3, 9, 1, 5\n\nWhich number was in POSITION 3?',opts:['7','3','9','1'],ans:2,why:'Position 3 = 9.'});
+BANK.push({g:'wm',t:'inp',stem:'Add all ODD numbers between 10 and 20 (exclusive).',ans:'75',why:'11+13+15+17+19=75.'});
+BANK.push({g:'wm',t:'mcq',stem:'BODMAS: RED=2, BLUE=3, GREEN=5.\nRED + GREEN × BLUE = ?',opts:['17','21','25','32'],ans:0,why:'5×3=15, 2+15=17.'});
+BANK.push({g:'wm',t:'mcq',stem:'All A are B. No B are C. Therefore…',opts:['All A are C','Some A are C','No A are C','Cannot determine'],ans:2,why:'All A are B and no B is C → no A is C.'});
+BANK.push({g:'wm',t:'mcq',stem:'Three coins tossed. Probability that AT LEAST TWO show heads?',opts:['25%','37.5%','50%','62.5%'],ans:2,why:'4 of 8 outcomes have ≥2 heads = 50%.'});
+BANK.push({g:'wm',t:'mcq',stem:'Ali is taller than Sara. Zaid is shorter than Sara. Who is tallest?',opts:['Ali','Sara','Zaid','Cannot determine'],ans:0,why:'Ali > Sara > Zaid.'});
+BANK.push({g:'wm',t:'inp',stem:'Digits 4, 7, 2 each used once. How many unique 3-digit PINs?',ans:'6',why:'3! = 6.'});
+BANK.push({g:'wm',t:'mcq',stem:'Three teams compete for golf AND tennis. How many outcome combinations?',opts:['6','8','9','12'],ans:2,why:'3×3=9.'});
+BANK.push({g:'wm',t:'mcq',stem:'able, rot, son, king\nWhich word shares a feature with all of the above?\nline, sit, take, hope, night',opts:['line','sit','take','hope'],ans:2,why:'PAR prefix: parable, parrot, parson, parking, partake.'});
+BANK.push({g:'wm',t:'mcq',stem:'In 13 years the combined ages of my 3 brothers will be 94.\nWhat will it be in 9 years time?',opts:['78','82','86','90'],ans:1,why:'4 yrs × 3 = 12 less. 94−12=82.'});
+BANK.push({g:'wm',t:'mcq',stem:'59 cubic blocks. Minimum to remove to make a solid cube with none left over?',opts:['27','32','36','40'],ans:1,why:'59−27=32 (next cube = 27).'});
+BANK.push({g:'wm',t:'mcq',stem:'7 4 2 6 3 5 8 1 9\nDifference between the average and the 2nd lowest even number?',opts:['0','1','2','3'],ans:1,why:'Average=5. Even: 2,4,6,8. 2nd lowest=4. 5−4=1.'});
+BANK.push({g:'wm',t:'mcq',stem:'List: Apple, Banana, Cherry, Date, Fig\n2nd from the END?',opts:['Cherry','Date','Fig','Banana'],ans:1,why:'Fig(1st), Date(2nd).'});
+BANK.push({g:'wm',t:'mcq',stem:'dirty, berry, hint, knot\nWhich one word shares a common feature with all four?\npart, cost, near, find, open',opts:['part','cost','near','find'],ans:1,why:'All letters in alphabetical order: cost=c,o,s,t ✓.'});
+BANK.push({g:'wm',t:'inp',stem:'How many minutes before midnight if 32 minutes ago\nit was 3× as many minutes past 22:00?',ans:'22',why:'88−x=3x → x=22... Let me verify: midnight−22=23:38. 32 ago=23:06. Past 22:00=66min=3×22 ✓.'});
+BANK.push({g:'wm',t:'mcq',stem:'Harry is 1⅓× as old as Larry. Larry is 1⅓× as old as Carrie.\nTogether they total 74. How old is Larry?',opts:['18','24','27','32'],ans:1,why:'Carrie=18, Larry=24, Harry=32.'});
+
+/* ══════════════════════════════════════════
+   RUNTIME
+══════════════════════════════════════════ */
+function shuffle(a){var b=a.slice();for(var i=b.length-1;i>0;i--){var j=Math.floor(Math.random()*(i+1));var t=b[i];b[i]=b[j];b[j]=t;}return b;}
+function pick(pool,n){return shuffle(pool).slice(0,Math.min(n,pool.length));}
+
+function buildTest(){
+  var t=[];
+  SECS.forEach(function(s){
+    var pool=BANK.filter(function(q){return q.g===s.id;});
+    pick(pool,8).forEach(function(q){t.push({sec:s,q:q});});
+  });
+  return t;
+}
+
+var TEST=[],ST={name:'',idx:0,secIdx:0,sel:null,locked:false,
+  scores:{fig:0,spa:0,num:0,ver:0,wm:0},totals:{fig:0,spa:0,num:0,ver:0,wm:0},
+  tid:null,rem:30*60};
+var phase='confirm';
+
+function showScr(id){document.querySelectorAll('.scr').forEach(function(e){e.classList.add('off');});document.getElementById(id).classList.remove('off');}
+function pulse(el){el.classList.remove('fu');void el.offsetWidth;el.classList.add('fu');}
+
+var cnEl=document.getElementById('cname'),goBtn=document.getElementById('go-btn');
+cnEl.addEventListener('input',function(){goBtn.disabled=cnEl.value.trim().length<2;});
+goBtn.addEventListener('click',beginTest);
+document.getElementById('sp-go-btn').addEventListener('click',beginSection);
+document.getElementById('action-btn').addEventListener('click',onAction);
+document.getElementById('skip-btn').addEventListener('click',doNext);
+
+function beginTest(){ST.name=cnEl.value.trim();TEST=buildTest();ST.idx=0;ST.secIdx=0;runTimer();showSplash(0);}
+
+function runTimer(){
+  var el=document.getElementById('clock');
+  ST.tid=setInterval(function(){
+    ST.rem--;var m=Math.floor(ST.rem/60),s=ST.rem%60;
+    el.textContent=(m<10?'0':'')+m+':'+(s<10?'0':'')+s;
+    if(ST.rem<=120)el.classList.add('red');
+    if(ST.rem<=0){clearInterval(ST.tid);endTest();}
+  },1000);
+}
+
+function showSplash(si){
+  var sec=SECS[si];
+  var cnt=TEST.filter(function(it){return it.sec.id===sec.id;}).length;
+  document.getElementById('sp-ico').textContent=sec.ico;
+  document.getElementById('sp-badge').textContent='Section '+(si+1)+' of '+SECS.length;
+  document.getElementById('sp-title').textContent=sec.title;
+  document.getElementById('sp-desc').textContent=sec.desc;
+  document.getElementById('sp-n').textContent=cnt;
+  var pEl=document.getElementById('sp-pills');pEl.innerHTML='';
+  sec.types.forEach(function(tp){var s=document.createElement('span');s.className='type-pill';s.textContent=tp;pEl.appendChild(s);});
+  pulse(document.getElementById('splash-card'));showScr('splash-scr');
+}
+
+function beginSection(){showScr('qscr');renderQ();}
+
+var kindLabels={mcq:'Multiple Choice',inp:'Fill in the Answer',seq:'Number / Letter Series',
+  fig:'Figure Matching',anagram:'Anagram',bridge:'Word Bridge',coded:'Decode the Phrase'};
+
+function renderQ(){
+  if(ST.idx>=TEST.length){endTest();return;}
+  var item=TEST[ST.idx],sec=item.sec,q=item.q;
+  ST.sel=null;ST.locked=false;phase='confirm';
+  document.getElementById('prog-bar').style.width=((ST.idx/TEST.length)*100)+'%';
+  document.getElementById('q-ctr').textContent=(ST.idx+1)+' / '+TEST.length;
+  document.getElementById('sec-tag').textContent=sec.title;
+  document.getElementById('q-kind').textContent=kindLabels[q.t]||'Question';
+  document.getElementById('q-stem').textContent=q.stem;
+  var hEl=document.getElementById('q-hint');
+  if(q.hint){hEl.textContent='💡 '+q.hint;hEl.style.display='block';}else{hEl.style.display='none';}
+  var body=document.getElementById('q-body');body.innerHTML='';
+  var fb=document.getElementById('fb');fb.style.display='none';fb.className='fb';
+  var ab=document.getElementById('action-btn');ab.textContent='Confirm →';ab.disabled=false;
+  pulse(document.getElementById('qcard'));
+
+  if(q.t==='fig'){buildFig(q,body);ab.disabled=true;}
+  else if(q.t==='mcq'){buildMCQ(q,body);ab.disabled=true;}
+  else if(q.t==='inp'){buildINP(body,ab);}
+  else if(q.t==='seq'){buildSEQ(q,body,ab);}
+  else if(q.t==='anagram'){buildAnagram(q,body);ab.disabled=true;}
+  else if(q.t==='bridge'){buildBridge(q,body);ab.disabled=true;}
+  else if(q.t==='coded'){buildCoded(q,body);ab.disabled=true;}
+}
+
+/* ── FIGURE BUILDER ── */
+function buildFig(q,body){
+  var cs=q.cellSize||80,os=q.optSize||70;
+  var area=document.createElement('div');area.className='fig-area';
+
+  if(q.isOddOut&&q.isDirectPick){
+    // Show all cells as clickable options
+    var grid=document.createElement('div');grid.className='fig-opts';
+    grid.style.gridTemplateColumns='repeat('+q.cells.length+', '+(cs+16)+'px)';
+    grid.style.display='flex';grid.style.flexWrap='wrap';grid.style.gap='8px';
+    q.cells.forEach(function(sv,i){
+      var opt=document.createElement('div');opt.className='fig-opt';
+      opt.style.width=(cs+16)+'px';
+      opt.innerHTML='<div style="width:'+cs+'px;height:'+cs+'px">'+sv+'</div>';
+      var lbl=document.createElement('div');lbl.className='fig-opt-lbl';lbl.textContent=String.fromCharCode(65+i);
+      opt.appendChild(lbl);
+      opt.addEventListener('click',function(){pickFig(opt,i);});
+      grid.appendChild(opt);
+    });
+    area.appendChild(grid);
+    body.appendChild(area);
+    return;
+  }
+
+  // Main matrix display
+  var isSeq=q.isSeq||q.isMirror||q.isAnalogy;
+  var gc=q.gridCols||(isSeq?5:3);
+
+  if(q.isMirror||q.isAnalogy){
+    // Show stimulus on left, then a separator, then answer options
+    var row=document.createElement('div');row.style.cssText='display:flex;align-items:center;gap:16px;margin-bottom:20px;flex-wrap:wrap';
+    var stimWrap=document.createElement('div');
+    q.cells.forEach(function(sv){
+      if(sv!==null){var c=document.createElement('div');c.className='fig-cell';c.style.width=cs+'px';c.style.height=cs+'px';c.innerHTML=sv;stimWrap.appendChild(c);}
+    });
+    if(q.isAnalogy&&q.cells.length>1){
+      stimWrap.style.cssText='display:grid;grid-template-columns:repeat('+gc+', '+cs+'px);gap:8px;align-items:center';
+      var sep=document.createElement('div');sep.style.cssText='font-size:24px;color:var(--sub);padding:0 8px';sep.textContent='→';
+      row.appendChild(stimWrap);row.appendChild(sep);
+    } else {
+      stimWrap.style.cssText='display:flex;gap:8px;align-items:center';
+      var sep2=document.createElement('div');sep2.style.cssText='font-size:24px;color:var(--sub);padding:0 8px';sep2.textContent='→';
+      row.appendChild(stimWrap);row.appendChild(sep2);
+    }
+    area.appendChild(row);
+  } else {
+    // Grid with blank cell
+    var grid=document.createElement('div');grid.className='fig-matrix';
+    grid.style.gridTemplateColumns='repeat('+gc+', '+cs+'px)';
+    q.cells.forEach(function(sv){
+      var c=document.createElement('div');
+      c.className='fig-cell'+(sv===null?' blank-cell':'');
+      c.style.width=cs+'px';c.style.height=cs+'px';
+      c.innerHTML=sv===null?'<span style="color:var(--a2);font-size:28px">?</span>':sv;
+      grid.appendChild(c);
+    });
+    area.appendChild(grid);
+  }
+
+  // Options row
+  var optLabel=document.createElement('div');optLabel.className='fig-row-label';
+  optLabel.style.marginTop='16px';
+  optLabel.textContent='— Select the correct option —';
+  area.appendChild(optLabel);
+
+  var oc=q.optCols||4;
+  var optRow=document.createElement('div');optRow.className='fig-opts';
+  optRow.style.gridTemplateColumns='repeat('+oc+', '+(os+16)+'px)';
+  q.opts.forEach(function(sv,i){
+    var opt=document.createElement('div');opt.className='fig-opt';
+    opt.style.width=(os+16)+'px';
+    opt.innerHTML='<div style="width:'+os+'px;height:'+os+'px">'+sv+'</div>';
+    var lbl=document.createElement('div');lbl.className='fig-opt-lbl';lbl.textContent=String.fromCharCode(65+i);
+    opt.appendChild(lbl);
+    opt.addEventListener('click',function(){pickFig(opt,i);});
+    optRow.appendChild(opt);
+  });
+  area.appendChild(optRow);
+  body.appendChild(area);
+}
+
+function pickFig(el,i){
+  if(ST.locked)return;
+  document.querySelectorAll('.fig-opt').forEach(function(o){o.classList.remove('sel');});
+  el.classList.add('sel');ST.sel=i;
+  document.getElementById('action-btn').disabled=false;
+}
+
+/* ── MCQ ── */
+function buildMCQ(q,body){
+  var g=document.createElement('div');g.className='mcq-grid';
+  q.opts.forEach(function(o,i){
+    var d=document.createElement('div');d.className='opt';
+    d.innerHTML='<span class="opt-k">'+String.fromCharCode(65+i)+'</span><span>'+o+'</span>';
+    d.addEventListener('click',function(){pickOpt(d,i);});
+    g.appendChild(d);
+  });
+  body.appendChild(g);
+}
+
+/* ── INPUT ── */
+function buildINP(body,ab){
+  ab.disabled=true;
+  var w=document.createElement('div');w.className='inp-wrap';
+  var inp=document.createElement('input');
+  inp.className='ans-inp';inp.id='ans-inp';inp.type='text';inp.placeholder='Your answer';
+  inp.addEventListener('input',function(){ab.disabled=this.value.trim()==='';});
+  inp.addEventListener('keydown',function(e){if(e.key==='Enter'&&!ab.disabled)onAction();});
+  w.appendChild(inp);body.appendChild(w);
+  setTimeout(function(){inp.focus();},180);
+}
+
+/* ── SEQ ── */
+function buildSEQ(q,body,ab){
+  var row=document.createElement('div');row.className='seq-row';
+  q.seq.forEach(function(v){
+    var b=document.createElement('div');b.className=v==='?'?'seq-box blank':'seq-box';b.textContent=v;row.appendChild(b);
+  });
+  body.appendChild(row);buildINP(body,ab);
+}
+
+/* ── ANAGRAM ── */
+function buildAnagram(q,body){
+  var wrap=document.createElement('div');wrap.className='anagram-tiles';
+  (q.tiles||[]).forEach(function(l){var t=document.createElement('div');t.className='anagram-tile';t.textContent=l;wrap.appendChild(t);});
+  body.appendChild(wrap);buildMCQ(q,body);
+}
+
+/* ── BRIDGE ── */
+function buildBridge(q,body){
+  var bd=q.bridgeData;
+  var wrap=document.createElement('div');wrap.className='bridge-wrap';
+  var lw=document.createElement('div');lw.className='bridge-word';lw.textContent=bd.left;
+  var ar=document.createElement('div');ar.className='bridge-arrow';ar.textContent='＋';
+  var bk=document.createElement('div');bk.className='bridge-word bridge-blank';bk.textContent='[ ? ]';
+  var ar2=document.createElement('div');ar2.className='bridge-arrow';ar2.textContent='＋';
+  var rw=document.createElement('div');rw.className='bridge-word';rw.textContent=bd.right;
+  wrap.appendChild(lw);wrap.appendChild(ar);wrap.appendChild(bk);wrap.appendChild(ar2);wrap.appendChild(rw);
+  body.appendChild(wrap);buildMCQ(q,body);
+}
+
+/* ── CODED ── */
+function buildCoded(q,body){
+  if(q.codedData){var box=document.createElement('div');box.className='coded-wrap';box.textContent=q.codedData.encoded;body.appendChild(box);}
+  buildMCQ(q,body);
+}
+
+/* ── PICK ── */
+function pickOpt(el,i){
+  if(ST.locked)return;
+  document.querySelectorAll('.opt').forEach(function(o){o.classList.remove('sel');});
+  el.classList.add('sel');ST.sel=i;document.getElementById('action-btn').disabled=false;
+}
+
+/* ══ CONFIRM/NEXT ══ */
+function onAction(){if(phase==='confirm')doConfirm();else doNext();}
+
+function doConfirm(){
+  if(ST.locked)return;ST.locked=true;phase='next';
+  var item=TEST[ST.idx],q=item.q;var correct=false;
+
+  if(q.t==='inp'||q.t==='seq'){
+    var inpEl=document.getElementById('ans-inp');
+    var val=inpEl?inpEl.value.trim().replace(/,/g,'').toLowerCase():'';
+    var exp=String(q.ans).replace(/,/g,'').toLowerCase();
+    correct=val===exp;
+    if(inpEl)inpEl.classList.add(correct?'ok':'bad');
+  } else {
+    correct=ST.sel===q.ans;
+    var isFig=(q.t==='fig');
+    document.querySelectorAll(isFig?'.fig-opt':'.opt').forEach(function(el,i){
+      el.classList.add('locked');
+      if(i===q.ans)el.classList.add('ok');
+      else if(i===ST.sel&&!correct)el.classList.add('bad');
+    });
+  }
+
+  ST.totals[item.sec.id]++;
+  if(correct)ST.scores[item.sec.id]++;
+
+  var fb=document.getElementById('fb');
+  fb.className='fb '+(correct?'ok':'bad');
+  fb.textContent=(correct?'✓ Correct! ':'✗ Incorrect. ')+q.why;
+  fb.style.display='block';
+
+  var ab=document.getElementById('action-btn');ab.textContent='Next →';ab.disabled=false;
+}
+
+function doNext(){
+  phase='confirm';ST.idx++;
+  if(ST.idx>=TEST.length){endTest();return;}
+  var cur=TEST[ST.idx].sec,prev=ST.idx>0?TEST[ST.idx-1].sec:null;
+  if(!prev||cur.id!==prev.id){for(var i=0;i<SECS.length;i++){if(SECS[i].id===cur.id){ST.secIdx=i;break;}}showSplash(ST.secIdx);return;}
+  renderQ();
+}
+
+/* ══ END ══ */
+var SHEET_URL='YOUR_GOOGLE_APPS_SCRIPT_URL_HERE';
+
+function endTest(){
+  clearInterval(ST.tid);
+  var tot=0;SECS.forEach(function(s){tot+=ST.scores[s.id];});
+  var pct=tot/TEST.length;
+  var iq=Math.max(65,Math.min(145,Math.round(65+pct*80)+(Math.random()>.5?1:-1)*Math.floor(Math.random()*3)));
+  var band,bc;
+  if(iq>=130){band='Superior Intelligence';bc='#8B5CF6';}
+  else if(iq>=115){band='Above Average';bc='#0EA5E9';}
+  else if(iq>=100){band='High Average';bc='#10B981';}
+  else if(iq>=85){band='Average';bc='#F59E0B';}
+  else{band='Below Average';bc='#EF4444';}
+
+  showScr('result-scr');
+  document.getElementById('r-name').textContent=ST.name;
+  var iqEl=document.getElementById('r-iq'),t0=null;
+  function tick(ts){if(!t0)t0=ts;var p=Math.min((ts-t0)/1200,1);var e=1-Math.pow(1-p,3);iqEl.textContent=Math.round(e*iq);if(p<1)requestAnimationFrame(tick);else iqEl.textContent=iq;}
+  requestAnimationFrame(tick);
+
+  var bEl=document.getElementById('r-band');
+  bEl.textContent=band;bEl.style.background=bc+'22';bEl.style.color=bc;bEl.style.border='1px solid '+bc+'55';
+
+  var bkdn=document.getElementById('bkdn');bkdn.innerHTML='';
+  SECS.forEach(function(s){
+    var sc=ST.scores[s.id]||0,ttl=ST.totals[s.id]||0,p2=ttl?sc/ttl:0;
+    var d=document.createElement('div');d.className='bk';
+    d.innerHTML='<div class="bk-lbl">'+s.ico+' '+s.title+'</div><div class="bk-track"><div class="bk-fill" style="width:'+(p2*100)+'%"></div></div><div class="bk-sc">'+sc+' / '+ttl+'</div>';
+    bkdn.appendChild(d);
+  });
+
+  setTimeout(function(){drawBell(iq);doConfetti();},350);
+
+  var el=30*60-ST.rem,mm=Math.floor(el/60),ss=el%60;
+  var payload={timestamp:new Date().toISOString(),candidate_name:ST.name,iq_score:iq,iq_band:band,
+    total_correct:tot,total_questions:TEST.length,score_pct:Math.round(pct*100)+'%',
+    time_taken:mm+'m '+(ss<10?'0':'')+ss+'s',
+    figure_matching:ST.scores.fig+'/'+(ST.totals.fig||0),
+    spatial:ST.scores.spa+'/'+(ST.totals.spa||0),
+    numerical:ST.scores.num+'/'+(ST.totals.num||0),
+    verbal:ST.scores.ver+'/'+(ST.totals.ver||0),
+    working_memory:ST.scores.wm+'/'+(ST.totals.wm||0)};
+  postSheet(payload);
+}
+
+function postSheet(p){
+  var el=document.getElementById('sub-status');el.style.display='block';
+  if(!SHEET_URL||SHEET_URL==='YOUR_GOOGLE_APPS_SCRIPT_URL_HERE'){
+    el.style.cssText='display:block;background:rgba(245,158,11,.1);border:1px solid rgba(245,158,11,.3);color:#F59E0B;padding:12px 14px;border-radius:9px;font-size:13px;margin-top:14px';
+    el.textContent='⚠️ Google Sheets not configured. See HR Setup Guide.';return;
+  }
+  el.style.cssText='display:block;background:rgba(14,165,233,.08);border:1px solid rgba(14,165,233,.25);color:#0EA5E9;padding:12px 14px;border-radius:9px;font-size:13px;margin-top:14px';
+  el.textContent='⏳ Sending to HR dashboard…';
+  fetch(SHEET_URL,{method:'POST',mode:'no-cors',headers:{'Content-Type':'application/json'},body:JSON.stringify(p)})
+  .then(function(){el.style.cssText='display:block;background:rgba(16,185,129,.1);border:1px solid rgba(16,185,129,.28);color:#10B981;padding:12px 14px;border-radius:9px;font-size:13px;margin-top:14px';el.textContent='✅ Results submitted to Earthlink HR Sheet.';})
+  .catch(function(e){el.style.cssText='display:block;background:rgba(239,68,68,.1);border:1px solid rgba(239,68,68,.28);color:#EF4444;padding:12px 14px;border-radius:9px;font-size:13px;margin-top:14px';el.textContent='❌ Submission failed. ('+e.message+')';});
+}
+
+function drawBell(iq){
+  var cv=document.getElementById('bell-cvs'),dpr=window.devicePixelRatio||1;
+  cv.width=cv.offsetWidth*dpr;cv.height=90*dpr;
+  var cx=cv.getContext('2d'),W=cv.width,H=cv.height;
+  var mn=100,sd=15,x0=55,x1=145;
+  function g(x){return Math.exp(-.5*Math.pow((x-mn)/sd,2));}
+  var pts=[];for(var x=x0;x<=x1;x+=.5)pts.push({x:x,y:g(x)});
+  var my=g(mn);
+  function tc(x,y){return{cx:((x-x0)/(x1-x0))*W,cy:H-(y/my)*(H*.78)-H*.06};}
+  cx.beginPath();var s2=false;
+  pts.forEach(function(p){if(p.x>iq)return;var c2=tc(p.x,p.y);if(!s2){cx.moveTo(c2.cx,c2.cy);s2=true;}else cx.lineTo(c2.cx,c2.cy);});
+  var ep=tc(Math.min(iq,x1),g(Math.min(iq,x1)));cx.lineTo(ep.cx,H);cx.lineTo(0,H);cx.closePath();
+  var gr=cx.createLinearGradient(0,0,W,0);gr.addColorStop(0,'rgba(14,165,233,.1)');gr.addColorStop(1,'rgba(139,92,246,.3)');cx.fillStyle=gr;cx.fill();
+  cx.beginPath();pts.forEach(function(p,i){var c2=tc(p.x,p.y);i?cx.lineTo(c2.cx,c2.cy):cx.moveTo(c2.cx,c2.cy);});
+  cx.strokeStyle='#0EA5E9';cx.lineWidth=1.5*dpr;cx.stroke();
+  var mp=tc(iq,0);cx.beginPath();cx.moveTo(mp.cx,0);cx.lineTo(mp.cx,H);cx.strokeStyle='#8B5CF6';cx.lineWidth=1.5*dpr;cx.setLineDash([4*dpr,3*dpr]);cx.stroke();cx.setLineDash([]);
+  cx.font=(10*dpr)+'px Inter,sans-serif';cx.fillStyle='#6B88A8';cx.textAlign='center';
+  [70,85,100,115,130].forEach(function(v){var p=tc(v,0);cx.fillText(v,p.cx,H-2);});
+  cx.fillStyle='#8B5CF6';cx.fillText('▲ '+iq,mp.cx,13*dpr);
+}
+
+function doConfetti(){
+  var cols=['#0EA5E9','#8B5CF6','#10B981','#F59E0B','#EF4444','#fff'];
+  for(var i=0;i<50;i++){(function(d){setTimeout(function(){
+    var el=document.createElement('div');el.className='cf-piece';
+    el.style.left=Math.random()*100+'vw';el.style.top='-10px';
+    el.style.background=cols[Math.floor(Math.random()*cols.length)];
+    document.body.appendChild(el);
+    var t0=null,dur=(Math.random()*1.6+1.2)*1000,dx=(Math.random()-.5)*80,spin=Math.random()*720-360;
+    function cf(ts){if(!t0)t0=ts;var p=Math.min((ts-t0)/dur,1);el.style.transform='translateX('+(dx*p)+'px) translateY('+(p*innerHeight*1.1)+'px) rotate('+(spin*p)+'deg)';el.style.opacity=p<.8?1:(1-p)/.2;if(p<1)requestAnimationFrame(cf);else el.remove();}
+    requestAnimationFrame(cf);
+  },d);})(i*45);}
+}
+
+})();
+</script>
+</body>
+</html>
